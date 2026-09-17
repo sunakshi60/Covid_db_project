@@ -136,3 +136,16 @@ WHERE g.report_date = (
 SELECT *
 FROM latest_country_covid
 ORDER BY confirmed DESC;
+
+
+--10.	Write a T-SQL query to calculate the total number of cases (confirmed + deaths + recovered) for each country.
+SELECT
+    c.name AS country,
+    g.confirmed,
+    g.deaths,
+    g.recovered,
+    (g.confirmed + g.deaths + g.recovered) AS total_cases
+FROM global_covid_stats g
+JOIN country c
+    ON g.country_id = c.country_id
+WHERE g.report_date = DATE '2021-09-30';

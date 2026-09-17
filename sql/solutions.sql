@@ -59,3 +59,22 @@ JOIN country c
 WHERE g.report_date = DATE '2021-09-30'
 ORDER BY g.active_cases DESC
 LIMIT 1;
+
+
+--6.	Create a stored procedure that returns the total number of recovered cases for a given country and date
+CREATE OR REPLACE PROCEDURE get_total_recovered(
+    p_country_id INT,
+    p_date DATE,
+    OUT total_recovered INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    SELECT COALESCE(SUM(recovered), 0)
+    INTO total_recovered
+    FROM covid_case_stats
+    WHERE country_id = p_country_id
+      AND report_date = p_date;
+END;
+$$;
+CALL get_total_recovered(1, '2020-01-30', NULL);

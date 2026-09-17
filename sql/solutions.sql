@@ -46,3 +46,16 @@ FROM (
     FROM covid_case_stats
     GROUP BY report_date
 ) AS daily_data;
+
+
+--5.	Find the maximum number of active cases recorded in any country on a specific date
+SELECT
+    c.name AS country,
+    g.report_date,
+    g.active_cases
+FROM global_covid_stats g
+JOIN country c
+    ON g.country_id = c.country_id
+WHERE g.report_date = DATE '2021-09-30'
+ORDER BY g.active_cases DESC
+LIMIT 1;

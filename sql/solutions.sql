@@ -96,3 +96,21 @@ BEGIN
 END;
 $$;
 CALL update_deaths(1, '2020-01-30', 50);
+
+
+
+--8.	Create a view that displays the total number of cases (confirmed, deaths, and recovered) for each country on a specific date.
+CREATE OR REPLACE VIEW country_covid_summary AS
+SELECT
+    c.name AS country,
+    g.report_date,
+    g.confirmed,
+    g.deaths,
+    g.recovered
+FROM global_covid_stats g
+JOIN country c
+    ON g.country_id = c.country_id;
+
+SELECT *
+FROM country_covid_summary
+WHERE report_date = DATE '2021-09-30';

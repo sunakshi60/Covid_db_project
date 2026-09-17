@@ -163,3 +163,33 @@ JOIN country c
 WHERE g.report_date = DATE '2021-09-30'
 ORDER BY g.new_confirmed DESC
 LIMIT 1;
+
+
+--12.	Create a CTE to calculate the percentage increase in confirmed cases for each country over the past week.
+WITH weekly_data AS (
+    SELECT
+        country_id,
+        report_date,
+        confirmed,
+        LAG(confirmed, 7) OVER (
+            PARTITION BY country_id
+            ORDER BY report_date
+        ) AS previous_week_confirmed
+    FROM global_covid_stats
+)
+SELECT
+    c.name AS country,
+    report_date,
+    confirmed,
+    previous_week_confirmed,
+    ROUND(
+        (
+            (confirmed - previous_week_confirmed)::NUMERIC
+            / NULLIF(previous_week_confirmed, 0)
+        ) * 100,
+        2
+    ) AS percentage_increase
+FROM weekly_data w
+JOIN country c
+    ON w.country_id = c.country_id
+WHERE previous_week_confirmed IS NOT NULL;

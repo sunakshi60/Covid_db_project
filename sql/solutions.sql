@@ -149,3 +149,17 @@ FROM global_covid_stats g
 JOIN country c
     ON g.country_id = c.country_id
 WHERE g.report_date = DATE '2021-09-30';
+
+
+
+--11.	Use T-SQL to identify the country with the highest number of new cases reported on a specific date.
+SELECT
+    c.name AS country,
+    g.report_date,
+    g.new_confirmed
+FROM global_covid_stats g
+JOIN country c
+    ON g.country_id = c.country_id
+WHERE g.report_date = DATE '2021-09-30'
+ORDER BY g.new_confirmed DESC
+LIMIT 1;

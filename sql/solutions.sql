@@ -114,3 +114,25 @@ JOIN country c
 SELECT *
 FROM country_covid_summary
 WHERE report_date = DATE '2021-09-30';
+
+
+--9.Implement a view to show the latest data (confirmed, deaths, recovered) for each country
+CREATE OR REPLACE VIEW latest_country_covid AS
+SELECT
+    c.name AS country,
+    g.report_date,
+    g.confirmed,
+    g.deaths,
+    g.recovered
+FROM global_covid_stats g
+JOIN country c
+    ON g.country_id = c.country_id
+WHERE g.report_date = (
+	SELECT MAX(g2.report_date)
+	FROM global_covid_stats g2
+	WHERE g2.country_id = g.country_id
+);
+
+SELECT *
+FROM latest_country_covid
+ORDER BY confirmed DESC;

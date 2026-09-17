@@ -78,3 +78,21 @@ BEGIN
 END;
 $$;
 CALL get_total_recovered(1, '2020-01-30', NULL);
+
+
+--7.	Design a stored procedure to update the number of deaths for a specific country and date.
+CREATE OR REPLACE PROCEDURE update_deaths(
+    p_country_id INT,
+    p_date DATE,
+    p_deaths INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE covid_case_stats
+    SET deaths = p_deaths
+    WHERE country_id = p_country_id
+      AND report_date = p_date;
+END;
+$$;
+CALL update_deaths(1, '2020-01-30', 50);

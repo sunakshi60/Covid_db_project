@@ -34,3 +34,15 @@ JOIN country c
     ON g.country_id = c.country_id
 GROUP BY c.continent
 ORDER BY total_confirmed DESC;
+
+
+--4.	Calculate the average number of new deaths per day across all countries.
+SELECT 
+    AVG(daily_deaths) AS average_new_deaths_per_day
+FROM (
+    SELECT 
+        report_date,
+        SUM(new_deaths) AS daily_deaths
+    FROM covid_case_stats
+    GROUP BY report_date
+) AS daily_data;
